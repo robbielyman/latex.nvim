@@ -87,3 +87,13 @@ for example the default mapping
  }
  ```
  yields, after inputting "#BZ" in math mode, the output "\mathbb{Z}".
+ 
+ ### Conceals
+ 
+ TODO
+ 
+ ## Non-features
+ 
+ - replicating conceal features provided by setting `g:tex_conceal="abdmgs"`
+ - compilation, forward/backward search, completion, linting—use [texlab](https://github.com/latex-lsp/texlab)
+ - highlighting—use treesitter
