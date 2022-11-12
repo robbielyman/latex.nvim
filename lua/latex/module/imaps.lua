@@ -128,6 +128,9 @@ function M._init_markdown(args)
     if map.context == nil then
       map.context = M.markdown_math_mode
     end
+    if map.leader == nil then
+      map.leader = args.default_leader
+    end
     vim.keymap.set("i", map.leader .. map.lhs, function()
       if map.context() then
         if not map.wrap_char then
