@@ -96,22 +96,22 @@ function M._init_tex(args)
         wrap_char = false,
         context = M.tex_math_mode,
       }
-      vim.keymap.set("i", map.leader .. map.lhs, function()
-        if map.context == nil then
-          map.context = M.tex_math_mode
-        end
-        if map.context() then
-          if not map.wrap_char then
-            return rhs
-          else
-            local char = vim.api.nvim_eval('nr2char(getchar())')
-            return rhs .. "{" .. char .. "}"
-          end
-        else
-          return map.leader .. map.lhs
-        end
-      end, {buffer = true, expr = true})
     end
+    if map.context == nil then
+      map.context = M.tex_math_mode
+    end
+    vim.keymap.set("i", map.leader .. map.lhs, function()
+      if map.context() then
+        if not map.wrap_char then
+          return rhs
+        else
+          local char = vim.api.nvim_eval('nr2char(getchar())')
+          return rhs .. "{" .. char .. "}"
+        end
+      else
+        return map.leader .. map.lhs
+      end
+    end, {buffer = true, expr = true})
   end
 end
 
@@ -124,22 +124,22 @@ function M._init_markdown(args)
         wrap_char = false,
         context = M.markdown_math_mode,
       }
-      vim.keymap.set("i", map.leader .. map.lhs, function()
-        if map.context == nil then
-          map.context = M.markdown_math_mode
-        end
-        if map.context() then
-          if not map.wrap_char then
-            return rhs
-          else
-            local char = vim.api.nvim_eval('nr2char(getchar())')
-            return rhs .. "{" .. char .. "}"
-          end
-        else
-          return map.leader .. map.lhs
-        end
-      end, {buffer = true, expr = true})
     end
+    if map.context == nil then
+      map.context = M.markdown_math_mode
+    end
+    vim.keymap.set("i", map.leader .. map.lhs, function()
+      if map.context() then
+        if not map.wrap_char then
+          return rhs
+        else
+          local char = vim.api.nvim_eval('nr2char(getchar())')
+          return rhs .. "{" .. char .. "}"
+        end
+      else
+        return map.leader .. map.lhs
+      end
+    end, {buffer = true, expr = true})
   end
 end
 
@@ -185,35 +185,37 @@ end
 
 function M.markdown_math_mode()
   local node = ts_utils.get_node_at_cursor()
-  local root
-  if node then
-    root = ts_utils.get_root_for_node(node)
-  end
-  if not root then
-    return false
-  end
   local parent
   if node then
     parent = node:parent()
   end
-  while node ~= nil and node ~= root do
+  while node ~= nil do
     local t = node:type()
     if t == "inline" then
       local start_row, _, end_row, _ = ts_utils.get_node_range(node)
-      local tab = vim.api.nvim_buf_get_lines(0, start_row, end_row, false)
-      local row, col = vim.api.nvim_win_get_cursor()
+      local tab = vim.api.nvim_buf_get_lines(0, start_row, end_row + 1, false)
+      local row, col = unpack(vim.api.nvim_win_get_cursor(0))
       local inside = false
       for i, text in ipairs(tab) do
-        if i > row - start_row + 1 then break end
+        if i > row - start_row then break end
         local index = 0
-        while true do
-          _, index = string.find(text, "%$%$", index + 1)
-          if not index then break end
-          if i == row - start_row + 1 then
-            if index > col + 1 then break end
+        local flag = false
+        repeat
+          _, index = string.find(text, "%$%$", index)
+          if index then
+            if i == row - start_row then
+              if index > col + 1 then
+                flag = true
+              else
+                inside = not inside
+              end
+            else
+              inside = not inside
+            end
+          else
+            flag = true
           end
-          inside = not inside
-        end
+        until flag == true
       end
       return inside
     end
