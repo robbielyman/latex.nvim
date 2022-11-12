@@ -1,41 +1,25 @@
 local L = {}
 
-L.imaps = require('module.imaps')
+L.imaps = require('latex.module.imaps')
 
 L.__index = L
 
 L._conceals = {}
 
+L._defaults = {
+  conceals = {
+    enabled = true,
+    add = {}
+  },
+  imaps = {
+    enabled = true,
+    add = {},
+    default_leader = "`"
+  }
+}
+
 function L.setup(args)
-  if args == nil or args == {} then
-    args = {
-      conceals = {
-        enabled = true,
-        add = {}
-      },
-      imaps = {
-        enabled = true,
-        add = {},
-        default_leader = "`"
-      }
-    }
-  else
-    if args.conceals == nil then
-      args.conceals = {
-        enabled = true,
-        add = {}
-      }
-    end
-    if args.imaps == nil then
-      args.imaps = {
-        enabled = true,
-        add = {},
-        default_leader = "`"
-      }
-    elseif args.imaps.default_leader == nil then
-      args.imaps.default_leader = "`"
-    end
-  end
+  args = vim.tbl_deep_extend("force", L._defaults, args)
   vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
     pattern = {"*.tex"},
     callback = function()
