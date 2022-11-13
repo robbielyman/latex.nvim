@@ -67,7 +67,7 @@ The `imaps.add` table in `setup()` expects one of the following formats
 }
 ```
 
-Assuming a `default_leader` of "`", typing "`lhs" while within math mode
+Assuming a `default_leader` of "\", typing "\lhs" while within math mode
 (e.g. between a pair of `$` or a `\[`, `\]` block in a `.tex` file,
 or between a pair of `$$` in a `.md` file)
 will yield an output of "rhs".
