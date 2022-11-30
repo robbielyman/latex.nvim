@@ -1,14 +1,19 @@
 local L = {}
 
 L.imaps = require('latex.module.imaps')
+L.conceals = require('latex.module.conceals')
 
 L.__index = L
 
-L._conceals = {}
-
 L._defaults = {
   conceals = {
-    enabled = true,
+    enabled = {
+      "greek",
+      "math",
+      "script",
+      "delim",
+      "font",
+    },
     add = {}
   },
   imaps = {
@@ -20,6 +25,7 @@ L._defaults = {
 
 function L.setup(args)
   args = vim.tbl_deep_extend("force", L._defaults, args == nil and {} or args)
+  L.conceals.init(args.conceals)
   vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
     pattern = {"*.tex"},
     callback = function()
