@@ -100,6 +100,7 @@ for example the default mapping
  The [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) repo has hints as to how
  to point your latex parser at my fork.
  Less obvious is that you have to compile neovim with `USE_BUNDLED_TS_PARSERS=0`.
+ Also in the `install_info` table, you'll need to set `revision = '4e1c009f58f4e285ec4b8dfbaece3453bacc756a'`.
  Almost all of the low-hanging fruit is done as far as concealing;
  hard things like using tree-sitter for `\'e` to `é` are not a priority.
  
