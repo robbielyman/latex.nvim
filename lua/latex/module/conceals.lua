@@ -67,6 +67,29 @@ function M.init(args)
     end
   end
   local strings = read_query_files(filenames)
+  local added_query_start =
+  [[(generic_command
+    command: ((command_name) @text.math
+    (#any-of? @text.math
+  ]]
+  local added_query_middle =
+  [[
+  ))
+  (#set-pairs! @text.math conceal
+  ]]
+  local added_query_end = "))"
+  for command, conceal in pairs(args.add) do
+    added_query_start = added_query_start .. '"\\\\' .. command .. '" '
+    added_query_middle = added_query_middle .. '"\\\\' .. command .. '" "' .. conceal .. '" '
+  end
+  if next(args.add) then
+    strings = strings .. added_query_start .. added_query_middle .. added_query_end
+  end
+  local file = io.open('/Users/rylee/src/queries', 'w')
+  if file then
+    file:write(strings)
+    io.close(file)
+  end
   vim.treesitter.query.set_query('latex', 'highlights', strings)
 end
 
