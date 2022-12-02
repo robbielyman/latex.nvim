@@ -112,6 +112,19 @@ for example the default mapping
  - Script: superscripts and subscripts
  - Delim: things like `\left` and many instances of curly braces.
  - Font: things like `\mathbb{Z}` to `ℤ`
+
+You can add your own concealed commands to the `conceals.add` table in the following format
+
+```lua
+add = {
+  ["colon"] = ":"
+}
+```
+
+The key should be the command name with the leading backslash stripped,
+and the value should be the single-character conceal to replace that command with.
+The `add` table is for concealing `generic_command` elements.
+Unlike most other conceals, these are *not* sensitive to the presence or absence of math mode.
  
  ## Non-features
  
