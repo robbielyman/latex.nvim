@@ -15,4 +15,4 @@
 (displayed_equation "\\]" @conceal (#set! conceal ""))
 (displayed_equation "$$" @conceal (#set! conceal ""))
 (text_mode
-  command: "_" @conceal (#set! conceal ""))
+  command: _ @conceal (#set! conceal ""))
