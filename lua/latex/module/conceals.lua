@@ -85,11 +85,6 @@ function M.init(args)
   if next(args.add) then
     strings = strings .. added_query_start .. added_query_middle .. added_query_end
   end
-  local file = io.open('/Users/rylee/src/queries', 'w')
-  if file then
-    file:write(strings)
-    io.close(file)
-  end
   vim.treesitter.query.set_query('latex', 'highlights', strings)
 end
 
