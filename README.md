@@ -31,7 +31,13 @@ This is equivalent to the following default configuration.
 ```lua
 require('latex').setup{
   conceals = {
-    enabled = true,
+    enabled = {
+      "greek",
+      "math",
+      "script",
+      "delim",
+      "font"
+    },
     add = {}
   },
   imaps = {
@@ -90,10 +96,24 @@ for example the default mapping
  
  ### Conceals
  
- TODO
+ Conceals currently require [my fork](https://github.com/ryleelyman/tree-sitter-latex) of the latex parser.
+ The [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) repo has hints as to how
+ to point your latex parser at my fork.
+ Less obvious is that you have to compile neovim with `USE_BUNDLED_TS_PARSERS=0`.
+ Also in the `install_info` table, you'll need to set `revision = '4e1c009f58f4e285ec4b8dfbaece3453bacc756a'`.
+ Almost all of the low-hanging fruit is done as far as concealing;
+ hard things like using tree-sitter for `\'e` to `é` are not a priority.
+ 
+ You can disable conceals on a per-file basis by redefining `conceals.enabled` in the `setup` function.
+ 
+ Currently the conceals provided are:
+ - Greek: things like `\sigma` to `σ`
+ - Math: things like `\amalg` to `⨿`
+ - Script: superscripts and subscripts
+ - Delim: things like `\left` and many instances of curly braces.
+ - Font: things like `\mathbb{Z}` to `ℤ`
  
  ## Non-features
  
- - replicating conceal features provided by setting `g:tex_conceal="abdmgs"`
  - compilation, forward/backward search, completion, linting—use [texlab](https://github.com/latex-lsp/texlab)
  - highlighting—use treesitter
