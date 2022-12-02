@@ -6,7 +6,7 @@
    "\\epsilon" "\\varepsilon" "\\zeta" "\\eta"
    "\\theta" "\\vartheta" "\\iota" "\\kappa"
    "\\lambda" "\\mu" "\\nu" "\\xi"
-   "\\pi" "\\vapi" "\\rho" "\\varrho"
+   "\\pi" "\\varpi" "\\rho" "\\varrho"
    "\\sigma" "\\varsigma" "\\tau" "\\upsilon"
    "\\phi" "\\varphi" "\\chi" "\\psi"
    "\\omega" "\\Gamma" "\\Delta" "\\Theta"
