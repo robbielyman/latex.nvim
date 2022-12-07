@@ -2,6 +2,7 @@ local L = {}
 
 L.imaps = require('latex.module.imaps')
 L.conceals = require('latex.module.conceals')
+L.surrounds = require('latex.module.surrounds')
 
 L.__index = L
 
@@ -20,6 +21,11 @@ L._defaults = {
     enabled = true,
     add = {},
     default_leader = "`"
+  },
+  surrounds = {
+    enabled = false,
+    command = "c",
+    environment = "e"
   }
 }
 
@@ -30,12 +36,14 @@ function L.setup(args)
     pattern = {"*.tex"},
     callback = function()
       L.imaps.init(args.imaps, "tex")
+      L.surrounds.init(args.surrounds)
     end
   })
   vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
     pattern = {"*.md"},
     callback = function()
       L.imaps.init(args.imaps, "markdown")
+      L.surrounds.init(args.surrounds)
     end
   })
   vim.api.nvim_create_autocmd({"BufLeave", "BufWinLeave"}, {
