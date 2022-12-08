@@ -11,10 +11,7 @@ function M.init(config)
         end,
         find = function()
           return require("nvim-surround.config").get_selection{
-            query = {
-              capture = "@function",
-              type = "highlights",
-            }
+            node = {"generic_command", "label_definition"}
           }
         end,
         change = {
@@ -23,7 +20,18 @@ function M.init(config)
             local cmd = require("nvim-surround.config").get_input "Command: "
             return { { cmd } , { } }
           end
-        }
+        },
+        delete = function ()
+          local sel = require("nvim-surround.config").get_selections{
+            char = config.command,
+            pattern = "^(\\.-{)().-(})()$"
+          }
+          if sel then return sel end
+          return require("nvim-surround.config").get_selections{
+            char = config.command,
+            pattern = "^(\\.*)().-()()$"
+          }
+        end
       },
       [config.environment] = {
         add = function()
@@ -35,7 +43,17 @@ function M.init(config)
             node = {"generic_environment", "math_environment"}
           }
         end,
-        delete = "^(\\begin{[^%}]*}%[[^%]]*%])().-(\\end{[^%}]*})()$",
+        delete = function()
+          local sel = require("nvim-surround.config").get_selections{
+            char = config.environment,
+            pattern = "^(\\begin%b{}%b[])().-(\\end%b{})()$"
+          }
+          if sel then return sel end
+          return require("nvim-surround.config").get_selections{
+            char = config.environment,
+            pattern = "^(\\begin%b{})().-(\\end%b{})()$"
+          }
+        end,
         change = {
           target = "^\\begin{([^%}]*)().-\\end{([^%}]*)()}$",
           replacement = function ()
