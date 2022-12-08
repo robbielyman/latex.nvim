@@ -44,7 +44,12 @@ require('latex').setup{
     enabled = true,
     add = {},
     default_leader = "`"
-  }
+  },
+  surrounds = {
+    enabled = false,
+    command = "c",
+    environment = "e",
+  },
 }
 ```
 
@@ -121,6 +126,18 @@ and the value should be the single-character conceal to replace that command wit
 The `add` table is for concealing `generic_command` elements.
 Unlike most other conceals, these are *not* sensitive to the presence or absence of math mode.
  
+ ### Surrounds
+
+ Requires [nvim-surround](https://github.com/kylechui/nvim-surround).
+ Actually at the moment requires the `patch-1` branch of [my fork](https://github.com/ryleelyman/nvim-surround),
+ so probably best to wait a bit.
+ Provides `add`, `change` and `delete` for commands and environments.
+ With default settings for `nvim-surround`, these are mapped to,
+ for example, `csc` for `c`hange `s`urrounding `c`ommand and
+ `dse` for `d`elete `s`urrounding `e`nvironment.
+
+ To enable, set `surrounds.enabled` to `true`.
+
  ## Non-features
  
  - compilation, forward/backward search, completion, linting—use [texlab](https://github.com/latex-lsp/texlab)
