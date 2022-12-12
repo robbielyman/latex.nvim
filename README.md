@@ -129,8 +129,6 @@ Unlike most other conceals, these are *not* sensitive to the presence or absence
  ### Surrounds
 
  Requires [nvim-surround](https://github.com/kylechui/nvim-surround).
- Actually at the moment requires the `patch-1` branch of [my fork](https://github.com/ryleelyman/nvim-surround),
- so probably best to wait a bit.
  Provides `add`, `change` and `delete` for commands and environments.
  With default settings for `nvim-surround`, these are mapped to,
  for example, `csc` for `c`hange `s`urrounding `c`ommand and
