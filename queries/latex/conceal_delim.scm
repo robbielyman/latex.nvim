@@ -16,3 +16,4 @@
 (displayed_equation "$$" @conceal (#set! conceal ""))
 (text_mode
   command: _ @conceal (#set! conceal ""))
+("\\item" @punctuation.special @conceal (#set! conceal "○"))
