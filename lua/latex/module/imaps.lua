@@ -202,7 +202,7 @@ function M._init_tex(args)
       else
         return map.leader .. map.lhs
       end
-    end, {buffer = true, expr = true})
+    end, {buffer = true, expr = true, desc = rhs .. (map.wrap_char and "{}" or "")})
   end
 end
 
@@ -228,7 +228,7 @@ function M._init_markdown(args)
       else
         return map.leader .. map.lhs
       end
-    end, {buffer = true, expr = true})
+    end, {buffer = true, expr = true, desc = rhs .. (map.wrap_char and "{}" or "")})
   end
 end
 
