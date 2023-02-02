@@ -31,10 +31,10 @@ L._defaults = {
 
 function L.setup(args)
   args = vim.tbl_deep_extend("force", L._defaults, args == nil and {} or args)
-  L.conceals.init(args.conceals)
   vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
     pattern = {"*.tex"},
     callback = function()
+      L.conceals.init(args.conceals)
       L.imaps.init(args.imaps, "tex")
       L.surrounds.init(args.surrounds)
     end
@@ -42,6 +42,7 @@ function L.setup(args)
   vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
     pattern = {"*.md"},
     callback = function()
+      L.conceals.init(args.conceals)
       L.imaps.init(args.imaps, "markdown")
       L.surrounds.init(args.surrounds)
     end
