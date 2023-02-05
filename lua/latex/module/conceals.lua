@@ -2,29 +2,26 @@ local query = require("vim.treesitter.query")
 
 local M = {}
 
-local function safe_read(filename, read_quantifier)
-  local file, err = io.open(filename, 'r')
-  if not file then
-    error(err)
-  end
-  local content = file:read(read_quantifier)
-  io.close(file)
-  return content
-end
-
 local function read_query_files(filenames)
-  local contents = {}
+  local contents = ""
 
   for _, filename in ipairs(filenames) do
-    table.insert(contents, safe_read(filename, '*a'))
+    local file, err = io.open(filename, 'r')
+    local payload = ''
+    if file then
+      payload = file:read('*a')
+      io.close(file)
+    else
+      error(err)
+    end
+    contents = contents .. '\n' .. payload
   end
-
-  return table.concat(contents, '')
+  return contents
 end
 
 local function hasgrandparent(match, _, _, predicate)
   local node = match[predicate[2]]
-  for i = 1, 2 do
+  for _ = 1, 2 do
     if not node then return false end
     node = node:parent()
   end
@@ -55,18 +52,17 @@ local function setpairs(match, _, source, predicate, metadata)
   end
 end
 
-function M.init(args)
-  if args.enabled == false then return end
-  local filenames = vim.treesitter.query.get_query_files('latex', 'highlights')
+local function load_queries(args)
+  local filenames = query.get_query_files('latex', 'highlights')
   query.add_predicate('has-grandparent?', hasgrandparent, true)
-  query.add_directive("set-pairs!", setpairs, true)
+  query.add_directive('set-pairs!', setpairs, true)
   for _, name in ipairs(args.enabled) do
     local files = vim.api.nvim_get_runtime_file("queries/latex/conceal_" .. name .. ".scm", true)
     for _, file in ipairs(files) do
       table.insert(filenames, file)
     end
   end
-  local strings = read_query_files(filenames)
+  local strings = read_query_files(filenames) or ''
   local added_query_start =
   [[(generic_command
     command: ((command_name) @text.math
@@ -83,9 +79,14 @@ function M.init(args)
     added_query_middle = added_query_middle .. '"\\\\' .. command .. '" "' .. conceal .. '" '
   end
   if next(args.add) then
-    strings = strings .. added_query_start .. added_query_middle .. added_query_end
+    strings = strings .. added_query_start ..added_query_middle .. added_query_end
   end
-  vim.treesitter.query.set_query('latex', 'highlights', strings)
+  query.set_query('latex', 'highlights', strings)
+end
+
+function M.init(args)
+  if args.enabled == false then return end
+  load_queries(args)
 end
 
 return M
