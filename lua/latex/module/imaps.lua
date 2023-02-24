@@ -181,9 +181,8 @@ function M.init(args, filetype)
 end
 
 function M._init_tex(args)
-  local fttable = require('nvim-treesitter.parsers').filetype_to_parsername
-  fttable.tex = 'latex'
-  fttable.plaintex = 'latex'
+  vim.treesitter.language.register('latex', 'tex')
+  vim.treesitter.language.register('latex', 'plaintex')
   for rhs, map in pairs(args.add) do
     if type(map) == "string" then
       map = {
