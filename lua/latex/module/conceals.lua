@@ -1,5 +1,3 @@
-local query = require("vim.treesitter.query")
-
 local M = {}
 
 local function read_query_files(filenames)
@@ -39,7 +37,7 @@ local function setpairs(match, _, source, predicate, metadata)
   local node = match[capture_id]
   local key = predicate[3]
   if not node then return end
-  local node_text = query.get_node_text(node, source)
+  local node_text = vim.treesitter.get_node_text(node, source)
   -- if metadata[capture_id] and metadata[capture_id].range then
   --   local sr, sc, er, ec = unpack(metadata[capture_id].range)
   --   node_text = vim.api.nvim_buf_get_text(source, sr, sc, er, ec, {})[1]
@@ -53,9 +51,9 @@ local function setpairs(match, _, source, predicate, metadata)
 end
 
 local function load_queries(args)
-  local filenames = query.get_query_files('latex', 'highlights')
-  query.add_predicate('has-grandparent?', hasgrandparent, true)
-  query.add_directive('set-pairs!', setpairs, true)
+  local filenames = vim.treesitter.query.get_files('latex', 'highlights')
+  vim.treesitter.query.add_predicate('has-grandparent?', hasgrandparent, true)
+  vim.treesitter.query.add_directive('set-pairs!', setpairs, true)
   for _, name in ipairs(args.enabled) do
     local files = vim.api.nvim_get_runtime_file("queries/latex/conceal_" .. name .. ".scm", true)
     for _, file in ipairs(files) do
@@ -81,7 +79,7 @@ local function load_queries(args)
   if next(args.add) then
     strings = strings .. added_query_start ..added_query_middle .. added_query_end
   end
-  query.set_query('latex', 'highlights', strings)
+  vim.treesitter.query.set('latex', 'highlights', strings)
 end
 
 function M.init(args)
