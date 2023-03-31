@@ -96,7 +96,7 @@ function M.tex_math_mode()
     elseif t == "inline_formula" or t == "displayed_equation" or t == "math_environment" then
       return true
     elseif t == "ERROR" then
-      local tab = vim.treesitter.query.get_node_text(node, 0)
+      local tab = vim.treesitter.get_node_text(node, 0)
       if type(tab) == 'string' then tab = {tab} end
       for _, text in ipairs(tab) do
         if string.find(text, "%$") or string.find(text, "\\%[") then
