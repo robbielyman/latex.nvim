@@ -1,13 +1,13 @@
 ; superscripts and subscripts conceals
 (text
-  word: (subscript) @text.math
-  (#has-ancestor? @text.math math_environment inline_formula displayed_equation)
-  (#not-has-ancestor? @text.math text_mode label_definition)
-  (#any-of? @text.math 
+  word: (subscript) @conceal
+  (#has-ancestor? @conceal math_environment inline_formula displayed_equation)
+  (#not-has-ancestor? @conceal text_mode label_definition)
+  (#any-of? @conceal 
    "_0" "_1" "_2" "_3" "_4" "_5" "_6" "_7" "_8" "_9"
    "_a" "_e" "_h" "_i" "_j" "_k" "_l" "_m" "_n" "_o" "_p" "_r" "_s" "_t"
    "_u" "_v" "_x" "_\\.")
-  (#set-pairs! @text.math conceal
+  (#set-pairs! @conceal conceal
    "_0" "₀"
    "_1" "₁"
    "_2" "₂"
@@ -38,14 +38,14 @@
    "_\\." "‸"))
 
 (text
-  word: (word) @text.math
-  (#has-ancestor? @text.math subscript)
-  (#has-ancestor? @text.math math_environment inline_formula displayed_equation)
-  (#not-has-ancestor? @text.math text_mode label_definition)
-  (#any-of? @text.math 
+  word: (word) @conceal
+  (#has-ancestor? @conceal subscript)
+  (#has-ancestor? @conceal math_environment inline_formula displayed_equation)
+  (#not-has-ancestor? @conceal text_mode label_definition)
+  (#any-of? @conceal 
    "0" "1" "2" "3" "4" "5" "6" "7" "8" "9"
    "a" "e" "h" "i" "j" "k" "l" "m" "n" "o" "p" "r" "s" "t" "u" "v" "x" "\\.")
-  (#set-pairs! @text.math conceal
+  (#set-pairs! @conceal conceal
    "0" "₀"
    "1" "₁"
    "2" "₂"
@@ -76,38 +76,38 @@
    "_\\." "‸"))
 
 (text
-  word: (subscript) @operator
-  (#has-ancestor? @operator math_environment inline_formula displayed_equation)
-  (#not-has-ancestor? @operator label_definition text_mode)
-  (#any-of? @operator "_+" "_-" "_/")
-  (#set-pairs! @operator conceal
+  word: (subscript) @conceal
+  (#has-ancestor? @conceal math_environment inline_formula displayed_equation)
+  (#not-has-ancestor? @conceal label_definition text_mode)
+  (#any-of? @conceal "_+" "_-" "_/")
+  (#set-pairs! @conceal conceal
    "_+" "₊"
    "_-" "₋"
    "_/" "ˏ"))
 
 (text
-  word: (operator) @operator
-  (#has-ancestor? @operator subscript)
-  (#has-ancestor? @operator math_environment inline_formula displayed_equation)
-  (#not-has-ancestor? @operator label_definition text_mode)
-  (#any-of? @operator "+" "-" "/")
-  (#set-pairs! @operator conceal
+  word: (operator) @conceal
+  (#has-ancestor? @conceal subscript)
+  (#has-ancestor? @conceal math_environment inline_formula displayed_equation)
+  (#not-has-ancestor? @conceal label_definition text_mode)
+  (#any-of? @conceal "+" "-" "/")
+  (#set-pairs! @conceal conceal
    "+" "₊"
    "-" "₋"
    "/" "ˏ"))
 
 (text
-  word: (superscript) @text.math
-  (#has-ancestor? @text.math math_environment inline_formula displayed_equation)
-  (#not-has-ancestor? @text.math label_definition text_mode)
-  (#any-of? @text.math
+  word: (superscript) @conceal
+  (#has-ancestor? @conceal math_environment inline_formula displayed_equation)
+  (#not-has-ancestor? @conceal label_definition text_mode)
+  (#any-of? @conceal
   "^0" "^1" "^2" "^3" "^4" "^5" "^6" "^7" "^8" "^9" 
   "^a" "^b" "^c" "^d" "^e" "^f" "^g" "^h" "^i" "^j" 
   "^k" "^l" "^m" "^n" "^o" "^p" "^r" "^s" "^t" "^u" 
   "^v" "^w" "^x" "^y" "^z" "^A" "^B" "^D" "^E" "^G" 
   "^H" "^I" "^J" "^K" "^L" "^M" "^N" "^O" "^P" "^R" 
   "^T" "^U" "^V" "^W")
-  (#set-pairs! @text.math conceal
+  (#set-pairs! @conceal conceal
   "^0" "⁰"
   "^1" "¹"
   "^2" "²"
@@ -164,15 +164,15 @@
   "^W" "ᵂ"))
 
 (text
-  word: (word) @text.math
-  (#has-ancestor? @text.math superscript)
-  (#has-ancestor? @text.math math_environment inline_formula displayed_equation)
-  (#not-has-ancestor? @text.math label_definition text_mode)
-  (#any-of? @text.math
+  word: (word) @conceal
+  (#has-ancestor? @conceal superscript)
+  (#has-ancestor? @conceal math_environment inline_formula displayed_equation)
+  (#not-has-ancestor? @conceal label_definition text_mode)
+  (#any-of? @conceal
   "0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "a" "b" "c" "d" "e" "f" "g" "h" "i" 
   "j" "k" "l" "m" "n" "o" "p" "r" "s" "t" "u" "v" "w" "x" "y" "z" 
   "A" "B" "D" "E" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "R" "T" "U" "V" "W")
-  (#set-pairs! @text.math conceal
+  (#set-pairs! @conceal conceal
   "0" "⁰"
   "1" "¹"
   "2" "²"
@@ -229,12 +229,12 @@
   "W" "ᵂ"))
 
 (text
-  word: (superscript) @operator
-  (#any-of? @operator
+  word: (superscript) @conceal
+  (#any-of? @conceal
   "^+" "^-" "^<" "^>" "^/" "^=" "^\.")
-  (#has-ancestor? @operator math_environment inline_formula displayed_equation)
-  (#not-has-ancestor? @operator text_mode label_definition)
-  (#set-pairs! @operator conceal
+  (#has-ancestor? @conceal math_environment inline_formula displayed_equation)
+  (#not-has-ancestor? @conceal text_mode label_definition)
+  (#set-pairs! @conceal conceal
   "^+" "⁺"
   "^-" "⁻"
   "^<" "˂"
@@ -244,13 +244,13 @@
   "^=" "˭"))
 
 (text
-  word: (operator) @operator
-  (#has-ancestor? @operator superscript)
-  (#has-ancestor? @operator math_environment inline_formula displayed_equation)
-  (#not-has-ancestor? @operator label_definition text_mode)
-  (#any-of? @operator
+  word: (operator) @conceal
+  (#has-ancestor? @conceal superscript)
+  (#has-ancestor? @conceal math_environment inline_formula displayed_equation)
+  (#not-has-ancestor? @conceal label_definition text_mode)
+  (#any-of? @conceal
   "+" "-" "<" ">" "/" "=" "\.")
-  (#set-pairs! @operator conceal
+  (#set-pairs! @conceal conceal
   "+" "⁺"
   "-" "⁻"
   "<" "˂"

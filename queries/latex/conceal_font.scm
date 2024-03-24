@@ -5,8 +5,8 @@
 
 ((generic_command
    command: (command_name)
-   arg: (curly_group)) @text.math
- (#any-of? @text.math 
+   arg: (curly_group)) @conceal
+ (#any-of? @conceal 
   "\\mathbb{A}" "\\mathbb{B}" "\\mathbb{C}" "\\mathbb{D}" "\\mathbb{E}" 
   "\\mathbb{F}" "\\mathbb{G}" "\\mathbb{H}" "\\mathbb{I}" "\\mathbb{J}" 
   "\\mathbb{K}" "\\mathbb{L}" "\\mathbb{M}" "\\mathbb{N}" "\\mathbb{O}" 
@@ -44,7 +44,7 @@
   "\\mathcal{O}" "\\mathcal{P}" "\\mathcal{Q}" "\\mathcal{R}" "\\mathcal{S}" 
   "\\mathcal{T}" "\\mathcal{U}" "\\mathcal{V}" "\\mathcal{W}" "\\mathcal{X}" 
   "\\mathcal{Y}" "\\mathcal{Z}")
- (#set-pairs! @text.math conceal
+ (#set-pairs! @conceal conceal
   "\\mathbb{A}" "𝔸"
   "\\mathbb{B}" "𝔹"
   "\\mathbb{C}" "ℂ"
