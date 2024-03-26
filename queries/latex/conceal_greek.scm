@@ -1,7 +1,7 @@
 ; greek conceal
 (generic_command
-  command: ((command_name) @text.math 
-  (#any-of? @text.math 
+  command: ((command_name) @conceal 
+  (#any-of? @conceal 
    "\\alpha" "\\beta" "\\gamma" "\\delta"
    "\\epsilon" "\\varepsilon" "\\zeta" "\\eta"
    "\\theta" "\\vartheta" "\\iota" "\\kappa"
@@ -13,9 +13,9 @@
    "\\Lambda" "\\Xi" "\\Pi" "\\Sigma"
    "\\Upsilon" "\\Phi" "\\Chi" "\\Psi"
    "\\Omega"))
-  (#has-ancestor? @text.math math_environment inline_formula displayed_equation)
-  (#not-has-ancestor? @text.math label_definition text_mode)
-  (#set-pairs! @text.math conceal 
+  (#has-ancestor? @conceal math_environment inline_formula displayed_equation)
+  (#not-has-ancestor? @conceal label_definition text_mode)
+  (#set-pairs! @conceal conceal 
    "\\alpha" "α" 
    "\\beta" "β"
    "\\gamma" "γ"

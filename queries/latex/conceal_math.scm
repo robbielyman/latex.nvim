@@ -1,7 +1,7 @@
 ; math conceals
 (generic_command
-  command: ((command_name) @operator
-  (#any-of? @operator
+  command: ((command_name) @conceal
+  (#any-of? @conceal
    "\\|" "\\amalg" "\\angle" "\\approx" 
    "\\ast" "\\asymp" "\\backslash" "\\bigcap" 
    "\\bigcirc" "\\bigcup" "\\bigodot" "\\bigoplus" 
@@ -30,9 +30,9 @@
    "\\triangle" "\\triangleleft" "\\triangleright" "\\uparrow" 
    "\\Uparrow" "\\updownarrow" "\\Updownarrow" "\\vdash" "\\vdots" 
    "\\vee" "\\wedge" "\\wp" "\\wr"))
-  (#has-ancestor? @text.math math_environment inline_formula displayed_equation)
-  (#not-has-ancestor? @text.math label_definition text_mode)
-  (#set-pairs! @text.math conceal
+  (#has-ancestor? @conceal math_environment inline_formula displayed_equation)
+  (#not-has-ancestor? @conceal label_definition text_mode)
+  (#set-pairs! @conceal conceal
    "\\|" "‖"
    "\\amalg" "∐"
    "\\angle" "∠"
@@ -186,14 +186,14 @@
    "\\wr" "≀"))
 
 (generic_command
-  command: ((command_name) @text.math
-  (#any-of? @text.math 
+  command: ((command_name) @conceal
+  (#any-of? @conceal 
    "\\aleph" "\\clubsuit" "\\diamondsuit" "\\heartsuit"
    "\\spadesuit" "\\ell" "\\emptyset" "\\varnothing"
    "\\hbar" "\\imath" "\\infty"))
-  (#has-ancestor? @text.math math_environment inline_formula displayed_equation)
-  (#not-has-ancestor? @text.math label_definition text_mode)
-  (#set-pairs! @text.math conceal
+  (#has-ancestor? @conceal math_environment inline_formula displayed_equation)
+  (#not-has-ancestor? @conceal label_definition text_mode)
+  (#set-pairs! @conceal conceal
    "\\aleph" "ℵ"
    "\\clubsuit" "♣"
    "\\diamondsuit" "♢"
