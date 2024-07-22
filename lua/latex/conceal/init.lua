@@ -1,5 +1,11 @@
 local M = {}
-
+M.greek=require("latex.conceal.symbol").greek
+M.mathbb=require("latex.conceal.mathfont").mathbb
+M.mathsf=require("latex.conceal.mathfont").mathsf
+M.mathcal=require("latex.conceal.mathfont").mathcal
+M.mathfrak=require("latex.conceal.mathfont").mathfrak
+M.mathscr=require("latex.conceal.mathfont").mathscr
+M.mathfont=vim.tbl_extend('force',M.mathbb,M.mathsf,M.mathcal,M.mathfrak,M.mathscr)
 local function read_query_files(filenames)
   local contents = ""
 
@@ -16,7 +22,6 @@ local function read_query_files(filenames)
   end
   return contents
 end
-
 local function hasgrandparent(match, _, _, predicate)
   local node = match[predicate[2]]
   for _ = 1, 2 do
@@ -30,7 +35,40 @@ local function hasgrandparent(match, _, _, predicate)
   end
   return false
 end
+local function is_in_conceal_table(match,_,source,predicate)
+  local node = match[predicate[2]]
+  if not node then return false end
+  local tablename=predicate[3]
+  local node_text = vim.treesitter.get_node_text(node, source)
+  if M[tablename][node_text] then return true else return false end
+end
+--- (math_environment (label_definition) @label) @equation (#label! @equation @label)
+--- add label to equation
+local function label_equation(match,_,source,predicate)
+  local equation_node = match[predicate[2]]
+  local label_node = match[predicate[3]]
+  if not (equation_node and label_node) then return end
+  local label_text = vim.treesitter.get_node_text(label_node, source)
+  local row,_,_,_=equation_node:range(false)
+  local ns_id=vim.api.nvim_create_namespace("latex")
+  vim.api.nvim_buf_set_extmark(0,ns_id,row,1,{
+    virt_text={{label_text,"@label"}},
+    virt_text_pos="right_align",
+  })
+end
 
+local function latexconceal(match,_,source,predicate,metadata)
+  local capture_id = predicate[2]
+  local node = match[capture_id]
+  local concealtype = predicate[3]
+  if not node then return end
+  local node_text = vim.treesitter.get_node_text(node, source)
+  -- if metadata[capture_id] and metadata[capture_id].range then
+  --   local sr, sc, er, ec = unpack(metadata[capture_id].range)
+  --   node_text = vim.api.nvim_buf_get_text(source, sr, sc, er, ec, {})[1]
+  -- end
+      metadata.conceal = M[concealtype][node_text]
+end
 local function setpairs(match, _, source, predicate, metadata)
   -- (#set-pairs! @aa key list)
   local capture_id = predicate[2]
@@ -53,7 +91,10 @@ end
 local function load_queries(args)
   local filenames = vim.treesitter.query.get_files('latex', 'highlights')
   vim.treesitter.query.add_predicate('has-grandparent?', hasgrandparent, true)
+  vim.treesitter.query.add_predicate('conceal-table?', is_in_conceal_table, true)
   vim.treesitter.query.add_directive('set-pairs!', setpairs, true)
+  vim.treesitter.query.add_directive('latexconceal!', latexconceal, true)
+  -- vim.treesitter.query.add_directive('label_equation!', label_equation, true)
   for _, name in ipairs(args.enabled) do
     local files = vim.api.nvim_get_runtime_file("queries/latex/conceal_" .. name .. ".scm", true)
     for _, file in ipairs(files) do

@@ -1,7 +1,7 @@
 local L = {}
 
 L.imaps = require('latex.module.imaps')
-L.conceals = require('latex.module.conceals')
+L.conceals = require('latex.conceal')
 L.surrounds = require('latex.module.surrounds')
 
 L.__index = L
@@ -18,7 +18,7 @@ L._defaults = {
     add = {}
   },
   imaps = {
-    enabled = true,
+    enabled = false,
     add = {},
     default_leader = "`"
   },

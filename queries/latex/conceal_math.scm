@@ -185,23 +185,27 @@
    "\\wp" "℘"
    "\\wr" "≀"))
 
-(generic_command
-  command: ((command_name) @conceal
-  (#any-of? @conceal 
-   "\\aleph" "\\clubsuit" "\\diamondsuit" "\\heartsuit"
-   "\\spadesuit" "\\ell" "\\emptyset" "\\varnothing"
-   "\\hbar" "\\imath" "\\infty"))
-  (#has-ancestor? @conceal math_environment inline_formula displayed_equation)
-  (#not-has-ancestor? @conceal label_definition text_mode)
-  (#set-pairs! @conceal conceal
-   "\\aleph" "ℵ"
-   "\\clubsuit" "♣"
-   "\\diamondsuit" "♢"
-   "\\heartsuit" "♡"
-   "\\spadesuit" "♠"
-   "\\ell" "ℓ"
-   "\\emptyset" "∅"
-   "\\varnothing" "∅"
-   "\\hbar" "ℏ"
-   "\\imath" "ɩ"
-   "\\infty" "∞"))
+; (generic_command
+;   command: ((command_name) @conceal
+;   (#any-of? @conceal 
+;    "\\aleph" "\\clubsuit" "\\diamondsuit" "\\heartsuit"
+;    "\\spadesuit" "\\ell" "\\emptyset" "\\varnothing"
+;    "\\hbar" "\\imath" "\\infty"))
+;   (#has-ancestor? @conceal math_environment inline_formula displayed_equation)
+;   (#not-has-ancestor? @conceal label_definition text_mode)
+;   (#set-pairs! @conceal conceal
+;    "\\aleph" "ℵ"
+;    "\\clubsuit" "♣"
+;    "\\diamondsuit" "♢"
+;    "\\heartsuit" "♡"
+;    "\\spadesuit" "♠"
+;    "\\ell" "ℓ"
+;    "\\emptyset" "∅"
+;    "\\varnothing" "∅"
+;    "\\hbar" "ℏ"
+;    "\\imath" "ɩ"
+;    "\\infty" "∞"))
+; ((math_environment
+;    (label_definition) @label) @equation
+;  (#label_equation! @equation @label)
+;  )
