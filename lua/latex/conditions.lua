@@ -21,7 +21,11 @@ local ENV_NODES = {
   sagesilent_environment=true,
   sageblock_environment=true,
 }
-
+local CMD_NODES = {
+  generic_command = true,
+}
+--- get node under cursor
+--- @return TSNode|nil
 local function get_node_at_cursor()
   local pos = vim.api.nvim_win_get_cursor(0)
   -- Subtract one to account for 1-based row indexing in nvim_win_get_cursor
@@ -63,14 +67,14 @@ function M.in_text(check_parent)
 end
 
 function M.in_comment()
-    local node = get_node_at_cursor()
-    while node do
-      if node:type() == "comment" then
-        return true
-      end
-      node = node:parent()
+  local node = get_node_at_cursor()
+  while node do
+    if node:type() == "comment" then
+      return true
     end
-    return false
+    node = node:parent()
+  end
+  return false
 end
 
 function M.in_math()
@@ -103,6 +107,81 @@ function M.in_env(env_name,check_parent)
     end
     node=node:parent()
   end
+end
+--- judge if the cursor is in n-th arg of cmd.
+--- cmd_name is the name of cmd without backslash, n is a number. 
+--- when n=nil, it will return the number k such that the cursor is in k-th arg if the cursor is in any arg of cmd.
+--- --TODO:when n=0, it will return the number k such that the cursor is in k-th arg if the cursor is in optional arg of cmd.
+--- check_ancestor means whether to check ancestor. For example, \cmd_name{\othercmd{aa|a}} 
+--- will return the number k such that the cursor is in k-th arg if check ancestor is the number k such that the cursor is in k-th arg, but return false when check ancestor is false
+--- when cmd_name is a table, will check all cmd_name in the table. return the number k such that the cursor is in k-th arg if at least one of them is found
+--- @param cmd_name string|string[]|table<string,boolean>
+--- @param n number
+--- @param check_ancestor boolean
+--- @return boolean|number
+function M.in_cmd_arg(cmd_name,n,check_ancestor)
+  if type(cmd_name)=="string" then
+    cmd_name={cmd_name}
+  end
+  for _,v in ipairs(cmd_name) do
+    cmd_name[v]=true
+  end
+  local name=""
+  local node = get_node_at_cursor()
+  if not node then
+    return false
+  end
+  local cmd_node=node:parent()
+  local command_name_node
+  if cmd_node:type()=="text" then
+    node=cmd_node
+    cmd_node=node:parent()
+  end
+  local buf = vim.api.nvim_get_current_buf()
+  while cmd_node do
+    if not CMD_NODES[cmd_node:type()] then
+      node=cmd_node
+      cmd_node=node:parent()
+      goto continue
+    end
+    command_name_node=cmd_node:field("command")[1]
+    name=vim.treesitter.get_node_text(command_name_node,buf):match("[a-zA-Z]+")
+    if not cmd_name[name] then
+      if not check_ancestor then 
+        return false
+      else
+        node=cmd_node
+        cmd_node=node:parent()
+        goto continue
+      end
+    else
+      break
+    end
+    ::continue::
+  end
+  if not cmd_node then
+    return false
+  end
+  command_name_node=cmd_node:field("command")[1]
+  if not command_name_node then
+    return false
+  end
+  name=vim.treesitter.get_node_text(command_name_node,buf):match("[a-zA-Z]+")
+  if not cmd_name[name] then return false end
+  if not n or n==0 then
+    local arg_nodes=cmd_node:field("arg")
+    for k,v in ipairs(arg_nodes) do
+      if node:equal(v) then
+        return k
+      end
+    end
+    return false
+  end
+  local arg_nodes=cmd_node:field("arg")
+  if node:equal(arg_nodes[n]) then
+    return n
+  end
+  return false
 end
 function M.in_fig()
   return M.in_env("figure",false)

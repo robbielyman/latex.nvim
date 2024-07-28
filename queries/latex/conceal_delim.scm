@@ -16,4 +16,13 @@
 (displayed_equation "$$" @conceal (#set! conceal ""))
 (text_mode
   command: _ @conceal (#set! conceal ""))
+["(" "[" "]" ")" ] @breaket
+((generic_command
+  (command_name) @curly_breaket) @breaket
+ (#eq? @curly_breaket "\\{")
+ (#set! @breaket conceal "{"))
+((generic_command
+  (command_name) @curly_breaket) @breaket
+ (#eq? @curly_breaket "\\}")
+ (#set! @breaket conceal "}"))
 ("\\item" @punctuation.special @conceal (#set! conceal "○"))

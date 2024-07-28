@@ -1,11 +1,22 @@
 local M = {}
 M.greek=require("latex.conceal.symbol").greek
+M.special=require("latex.conceal.symbol").special
+M.othersymbol=require("latex.conceal.symbol").othersymbol
+M.symbol=vim.tbl_extend('force',M.greek,M.special,M.othersymbol)
 M.mathbb=require("latex.conceal.mathfont").mathbb
+M.mathbbm=require("latex.conceal.mathfont").mathbbm
 M.mathsf=require("latex.conceal.mathfont").mathsf
 M.mathcal=require("latex.conceal.mathfont").mathcal
 M.mathfrak=require("latex.conceal.mathfont").mathfrak
 M.mathscr=require("latex.conceal.mathfont").mathscr
-M.mathfont=vim.tbl_extend('force',M.mathbb,M.mathsf,M.mathcal,M.mathfrak,M.mathscr)
+M.mathfont=vim.tbl_extend('force',M.mathbb,M.mathsf,M.mathcal,M.mathfrak,M.mathscr,M.mathbbm)
+M.subscript=require("latex.conceal.script").subscript
+M.superscript=require("latex.conceal.script").superscript
+M.hugeoperator=require("latex.conceal.hugeoperator")
+M.operator=require("latex.conceal.operator")
+M.operator=vim.tbl_extend('force',M.operator,M.hugeoperator)
+M.others=require("latex.conceal.others")
+M.relationship=require("latex.conceal.relationship")
 local function read_query_files(filenames)
   local contents = ""
 
@@ -39,6 +50,7 @@ local function is_in_conceal_table(match,_,source,predicate)
   local node = match[predicate[2]]
   if not node then return false end
   local tablename=predicate[3]
+  if not M[tablename] then return false end
   local node_text = vim.treesitter.get_node_text(node, source)
   if M[tablename][node_text] then return true else return false end
 end

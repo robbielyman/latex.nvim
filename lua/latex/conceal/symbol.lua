@@ -62,7 +62,7 @@ M.special={
    ["\\heartsuit"]="♡",
    ["\\spadesuit"]="♠",
 }
-M.other={
+M.othersymbol={
    ["\\imath"]="ɩ",
    ["\\jmath"]="𝚥",
    ["\\emptyset"]="∅",
