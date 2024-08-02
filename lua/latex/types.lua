@@ -1,7 +1,7 @@
 ---@class ConcealTableInfo
 ---@field type string
 ---@field name string
----@field condition function|string
+---@field condition function
 ---@field query string
 ---@field query_file string
 ---@field no_query boolean
@@ -10,7 +10,7 @@
 ---@class ConcealTableInfoSimple
 ---@field type? string
 ---@field name? string
----@field condition? function|string
+---@field condition? function
 ---@field query? string
 ---@field query_file? string
 ---@field no_query? boolean

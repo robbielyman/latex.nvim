@@ -1,5 +1,5 @@
 return {
-	{ type = "simple", condition = "in_math" },
+	{ type = "simple", condition = require("latex.conditions.query").in_math },
 	["\\approx"] = "≈", --op
 	["\\cap"] = "∩", --op
 	["\\cdot"] = "·", --op

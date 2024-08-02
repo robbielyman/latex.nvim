@@ -1,4 +1,4 @@
-local M = { { type = "mutiple", condition = "in_math", query_file = "script" } }
+local M = { { type = "mutiple", condition = require("latex.conditions.query").in_math, query_file = "script" } }
 M.subscript = {
 	["_0"] = "₀",
 	["_1"] = "₁",
