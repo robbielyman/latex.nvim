@@ -168,4 +168,7 @@ end
 function M.in_item()
 	return M.in_env({ "itemize", "enumerate" }, false)
 end
+function M.in_table()
+	return M.in_env({ "tblr", "cases", "matrix", }, false)
+end
 return M
