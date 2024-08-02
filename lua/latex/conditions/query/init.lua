@@ -1,14 +1,16 @@
 local M = {}
 local util = require("latex.conditions.util")
----@param Node? TSNode
+---@param Node TSNode
+---@param source number|string #the source of TSTree
 ---@param check_parent? boolean
-function M.in_text(Node, check_parent)
+function M.in_text(Node, source, check_parent)
 	local node = Node or util.get_node_at_cursor()
+	local parent
 	while node do
 		if node:type() == "text_mode" then
 			if check_parent then
 				-- For \text{}
-				local parent = node:parent()
+				parent = node:parent()
 				if parent and util.MATH_NODES[parent:type()] then
 					return false
 				end
@@ -17,32 +19,51 @@ function M.in_text(Node, check_parent)
 		elseif util.MATH_NODES[node:type()] then
 			return false
 		end
-		node = node:parent()
+		parent = node:parent()
+		if parent then
+			node = parent
+		else
+			break
+		end
 	end
 	return true
 end
 
----@param Node? TSNode
-function M.in_comment(Node)
+---@param Node TSNode
+---@param source number|string #the source of TSTree
+function M.in_comment(Node, source)
 	local node = Node or util.get_node_at_cursor()
+	local parent
 	while node do
 		if node:type() == "comment" then
 			return true
 		end
-		node = node:parent()
+		parent = node:parent()
+		if parent then
+			node = parent
+		else
+			break
+		end
 	end
 	return false
 end
----@param Node? TSNode
-function M.in_math(Node)
+---@param Node TSNode
+---@param source number|string #the source of TSTree
+function M.in_math(Node, source)
 	local node = Node or util.get_node_at_cursor()
+	local parent
 	while node do
 		if util.TEXT_NODES[node:type()] then
 			return false
 		elseif util.MATH_NODES[node:type()] then
 			return true
 		end
-		node = node:parent()
+		parent = node:parent()
+		if parent then
+			node = parent
+		else
+			break
+		end
 	end
 	return false
 end
@@ -53,8 +74,9 @@ end
 ---@return table<string,string> | false
 ---@param env_name string|string[]|table<string,boolean>
 ---@param check_ancestor boolean
----@param Node? TSNode
-function M.in_env(Node, env_name, check_ancestor)
+---@param Node TSNode
+---@param source number|string #the source of TSTree
+function M.in_env(Node, source, env_name, check_ancestor)
 	if type(env_name) == "string" then
 		env_name = { env_name }
 	end
@@ -62,23 +84,23 @@ function M.in_env(Node, env_name, check_ancestor)
 		env_name[v] = true
 	end
 	local node = Node or util.get_node_at_cursor()
-	local buf = vim.api.nvim_get_current_buf()
+	local parent
 	local name = ""
 	local name_node
 	while node do
 		if util.ENV_NODES[node:type()] then
 			name_node = node:field("begin")[1]:field("name")[1]
-			name = vim.treesitter.get_node_text(name_node, buf):match("[A-Za-z]+")
+			name = vim.treesitter.get_node_text(name_node, source):match("[A-Za-z]+")
 			if env_name[name] then
 				local result = { env_name = name, args = {} }
 				local begin_node = node:field("begin")[1]
 				local optional_arg_node = begin_node:field("options")[1]
 				result.optional_arg = optional_arg_node
-						and vim.treesitter.get_node_text(optional_arg_node, buf):sub(2, -2)
+						and vim.treesitter.get_node_text(optional_arg_node, source):sub(2, -2)
 					or ""
 				local arg_node = begin_node:next_sibling()
 				while arg_node and string.match(arg_node:type(), "^curly_group") do
-					result.args[#result.args + 1] = vim.treesitter.get_node_text(arg_node, buf):sub(2, -2)
+					result.args[#result.args + 1] = vim.treesitter.get_node_text(arg_node, source):sub(2, -2)
 					arg_node = arg_node:next_sibling()
 				end
 				return result
@@ -86,8 +108,14 @@ function M.in_env(Node, env_name, check_ancestor)
 				return false
 			end
 		end
-		node = node:parent()
+		parent = node:parent()
+		if parent then
+			node = parent
+		else
+			break
+		end
 	end
+	return false
 end
 --- judge if the node is in n-th arg of cmd.
 --- cmd_name is the name of cmd without backslash, n is a number.
@@ -98,8 +126,9 @@ end
 --- @param n number -the index of arg. when n=0 or n=nil, will check all.
 --- @param check_ancestor boolean -weather to check ancestor
 --- @return boolean|number will return the number k such that the node is in k-th arg if check ancestor is the number k such that the cursor is in k-th arg, but return false when check ancestor is false
---- @param Node? TSNode the node to check
-function M.in_cmd_arg(Node, cmd_name, n, check_ancestor)
+--- @param Node TSNode the node to check
+---@param source number|string #the source of TSTree
+function M.in_cmd_arg(Node, source, cmd_name, n, check_ancestor)
 	if type(cmd_name) == "string" then
 		cmd_name = { cmd_name }
 	end
@@ -117,7 +146,6 @@ function M.in_cmd_arg(Node, cmd_name, n, check_ancestor)
 		node = cmd_node
 		cmd_node = node:parent()
 	end
-	local buf = vim.api.nvim_get_current_buf()
 	while cmd_node do
 		if not util.CMD_NODES[cmd_node:type()] then
 			node = cmd_node
@@ -125,7 +153,7 @@ function M.in_cmd_arg(Node, cmd_name, n, check_ancestor)
 			goto continue
 		end
 		command_name_node = cmd_node:field("command")[1]
-		name = vim.treesitter.get_node_text(command_name_node, buf):match("[a-zA-Z]+")
+		name = vim.treesitter.get_node_text(command_name_node, source):match("[a-zA-Z]+")
 		if not cmd_name[name] then
 			if not check_ancestor then
 				return false
@@ -146,7 +174,7 @@ function M.in_cmd_arg(Node, cmd_name, n, check_ancestor)
 	if not command_name_node then
 		return false
 	end
-	name = vim.treesitter.get_node_text(command_name_node, buf):match("[a-zA-Z]+")
+	name = vim.treesitter.get_node_text(command_name_node, source):match("[a-zA-Z]+")
 	if not cmd_name[name] then
 		return false
 	end
@@ -165,16 +193,19 @@ function M.in_cmd_arg(Node, cmd_name, n, check_ancestor)
 	end
 	return false
 end
----@param Node? TSNode
-function M.in_fig(Node)
-	return M.in_env(Node, "figure", false)
+---@param Node TSNode
+---@param source number|string #the source of TSTree
+function M.in_fig(Node, source)
+	return M.in_env(Node, source, "figure", false)
 end
----@param Node? TSNode
-function M.in_preamble(Node)
-	return not M.in_env(Node, "document", true)
+---@param Node TSNode
+---@param source number|string #the source of TSTree
+function M.in_preamble(Node, source)
+	return not M.in_env(Node, source, "document", true)
 end
----@param Node? TSNode
-function M.in_item(Node)
-	return M.in_env(Node, { "itemize", "enumerate" }, false)
+---@param Node TSNode
+---@param source number|string #the source of TSTree
+function M.in_item(Node, source)
+	return M.in_env(Node, source, { "itemize", "enumerate" }, false)
 end
 return M
