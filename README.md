@@ -88,7 +88,7 @@ For now I didn't add my LuaSnips in this plugin, but I will add them later.
  We can use different colors for different conceal, which make our tex file more readable. 
  You can add your own concealed commands to the `conceal.conceal_tbl` table, see Configuration
 
- # ### Surrounds
+<!-- # ### Surrounds
  #
  # Requires [nvim-surround](https://github.com/kylechui/nvim-surround).
  # Provides `add`, `change` and `delete` for commands and environments.
@@ -96,4 +96,4 @@ For now I didn't add my LuaSnips in this plugin, but I will add them later.
  # for example, `csc` for `c`hange `s`urrounding `c`ommand and
  # `dse` for `d`elete `s`urrounding `e`nvironment.
  #
- # To enable, set `surrounds.enabled` to `true`.
+ # To enable, set `surrounds.enabled` to `true`. -->
