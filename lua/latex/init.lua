@@ -1,13 +1,13 @@
 local L = {}
 
 L.imaps = require("latex.module.imaps")
-L.conceals = require("latex.conceal")
+L.conceal = require("latex.conceal")
 L.surrounds = require("latex.module.surrounds")
 
 L.__index = L
 
 L._defaults = {
-	conceals = {
+	conceal = {
 		enabled = {
 			mathfont = true,
 			symbol = true,
@@ -30,10 +30,10 @@ L._defaults = {
 			special = true,
 			othersymbol = true,
 		},
-		add = {
+		conceal_tbl = {
 			mathfont = { ["\\mathbb{A}"] = false },
 			test = { ["\\test"] = "T" },
-			conditiontest = { { condition = "in_item" }, ["\\item"] = "I" },
+			conditiontest = { { condition = require("latex.conditions.query").in_item }, ["\\item"] = "I" },
 		},
 	},
 	imaps = {
@@ -50,11 +50,11 @@ L._defaults = {
 
 function L.setup(args)
 	args = vim.tbl_deep_extend("force", L._defaults, args == nil and {} or args)
-	L.conceals.init(args.conceals)
+	L.conceal.init(args.conceal)
 	-- vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 	-- 	pattern = { "*.tex" },
 	-- 	callback = function()
-	-- 		L.conceals.init(args.conceals)
+	-- 		L.conceal.init(args.conceal)
 	-- 		L.imaps.init(args.imaps, "tex")
 	-- 		L.surrounds.init(args.surrounds)
 	-- 	end,
@@ -62,7 +62,7 @@ function L.setup(args)
 	-- vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 	-- 	pattern = { "*.md" },
 	-- 	callback = function()
-	-- 		L.conceals.init(args.conceals)
+	-- 		L.conceal.init(args.conceal)
 	-- 		L.imaps.init(args.imaps, "markdown")
 	-- 		L.surrounds.init(args.surrounds)
 	-- 	end,

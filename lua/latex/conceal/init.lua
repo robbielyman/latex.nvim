@@ -162,7 +162,7 @@ local function load_queries(args)
 	vim.treesitter.query.add_directive("latexconceal!", latexconceal, true)
 	-- vim.treesitter.query.add_directive('label_equation!', label_equation, true)
 	local strings = read_query_files(filenames) or ""
-	add_conceal_table(args.add)
+	add_conceal_table(args.conceal_tbl)
 	for k, v in pairs(M.conceal_tbl) do
 		if true and not args.disabled[k] then
 			strings = make_query(v) .. strings
