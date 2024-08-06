@@ -45,12 +45,14 @@ function M.in_math()
 end
 
 ---judge if the cursor is in some certain environment.
----when check_ancestor is false, will only check the nearest env_nodes.
----when check_ancestor is true, will check all ancestors.
----when in given env, well return a table contains fields env_name:string,args:string[],optional_arg:string
----@return table|false
----@param env_name string|string[]|table<string,boolean>
----@param check_ancestor boolean
+---
+---
+---
+---@return table|false 
+---@param env_name string|string[]|table<string,boolean> #**when in given env, it returns a table contains fields 
+---env_name:string,args:string[],optional_arg:string**
+---@param check_ancestor boolean #**when check_ancestor is false, the function will only check the nearest env_nodes.
+---when check_ancestor is true, the function will check all ancestors.**
 function M.in_env(env_name, check_ancestor)
 	if type(env_name) == "string" then
 		env_name = { env_name }
@@ -88,13 +90,14 @@ function M.in_env(env_name, check_ancestor)
 end
 
 --- judge if the cursor is in n-th arg of cmd.
---- --TODO:when n=0, it will return the number k such that the cursor is in k-th arg if the cursor is in optional arg of cmd.
---- check_ancestor means whether to check ancestor. For example, \cmd_name{\othercmd{aa|a}}
---- will return the number k such that the cursor is in k-th arg if check ancestor is the number k such that the cursor is in k-th arg, but return false when check ancestor is false
---- when cmd_name is a table, will check all cmd_name in the table. return the number k such that the cursor is in k-th arg if at least one of them is found
---- @param cmd_name string|string[]|table<string,boolean> #**the name of cmd without backslash**
---- @param n number #**when n=nil, it will return the number k such that the cursor is in k-th arg if the cursor is in any arg of cmd.**
---- @param check_ancestor boolean
+--- 
+--- 
+--- @param cmd_name string|string[]|table<string,boolean> #**the name of cmd without backslash. If cmd_name is a table, it will check all cmd_name in the table and 
+--- return the number k such that the cursor is in k-th arg if at least one of them is found**
+--- @param n number #**when n=nil, if the cursor is in any arg of cmd, it will return the number k such that the cursor is in k-th arg.**
+--- **--TODO:when n=0, it will return the number k such that the cursor is in k-th arg if the cursor is in optional arg of cmd.**
+--- @param check_ancestor boolean #**whether to check ancestor. For example, \cmd_name{\othercmd{aa|a}} will return the number k such that the cursor is in k-th arg 
+--- if check ancestor is the number k such that the cursor is in k-th arg, but return false when check ancestor is false.**
 --- @return boolean|number
 function M.in_cmd_arg(cmd_name, n, check_ancestor)
 	if type(cmd_name) == "string" then

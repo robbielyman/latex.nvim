@@ -27,7 +27,6 @@ for _, v in ipairs(conceal_tbls) do
 end
 local function read_query_files(filenames)
 	local contents = ""
-
 	for _, filename in ipairs(filenames) do
 		local file, err = io.open(filename, "r")
 		local payload = ""
@@ -58,6 +57,7 @@ end
 -- 	end
 -- 	return false
 -- end
+
 local function is_in_conceal_table(match, _, source, predicate)
 	local node = match[predicate[2]]
 	if not node then

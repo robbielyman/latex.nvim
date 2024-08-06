@@ -24,6 +24,7 @@ M.ENV_NODES = {
 M.CMD_NODES = {
 	generic_command = true,
 }
+
 --- get node under cursor
 --- @return TSNode|nil
 function M.get_node_at_cursor()
