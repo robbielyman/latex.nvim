@@ -1,5 +1,5 @@
 return {
-	{ type = "simple", comdition = "in_math" },
+	{ type = "simple", comdition = require("latex.conditions.query").in_math },
 	["\\bot"] = "⊥", --re
 	["\\cong"] = "≅", --re
 	["\\doteq"] = "≐", --re
