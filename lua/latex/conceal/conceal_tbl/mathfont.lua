@@ -1,4 +1,4 @@
-local M = { { type = "mutiple", condition = "in_math" } }
+local M = { { type = "mutiple", condition = require("latex.conditions.query").in_math } }
 M.mathbb = {
 	["\\mathbb{A}"] = "𝔸",
 	["\\mathbb{B}"] = "𝔹",
