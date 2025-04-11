@@ -52,8 +52,8 @@ end
 
 local function load_queries(args)
   local filenames = vim.treesitter.query.get_files('latex', 'highlights')
-  vim.treesitter.query.add_predicate('has-grandparent?', hasgrandparent, true)
-  vim.treesitter.query.add_directive('set-pairs!', setpairs, true)
+  vim.treesitter.query.add_predicate('has-grandparent?', hasgrandparent, {force = true})
+  vim.treesitter.query.add_directive('set-pairs!', setpairs, {force = true})
   for _, name in ipairs(args.enabled) do
     local files = vim.api.nvim_get_runtime_file("queries/latex/conceal_" .. name .. ".scm", true)
     for _, file in ipairs(files) do
