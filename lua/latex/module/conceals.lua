@@ -20,10 +20,14 @@ end
 local function hasgrandparent(match, _, _, predicate)
   local node = match[predicate[2]]
   for _ = 1, 2 do
-    if not node then return false end
+    if not node or not node.parent then
+      return false
+    end
     node = node:parent()
   end
-  if not node then return false end
+  if not node then
+    return false
+  end
   local ancestor_types = { unpack(predicate, 3) }
   if vim.tbl_contains(ancestor_types, node:type()) then
     return true
