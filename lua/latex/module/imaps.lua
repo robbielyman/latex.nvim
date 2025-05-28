@@ -1,4 +1,4 @@
-local ts_utils = require('nvim-treesitter.ts_utils')
+local ts_utils = require("nvim-treesitter.ts_utils")
 
 local M = {}
 
@@ -47,33 +47,33 @@ M._defaults = {
   ["\\mathbb"] = {
     lhs = "B",
     leader = "#",
-    wrap_char = true
+    wrap_char = true,
   },
   ["\\mathbf"] = {
     lhs = "b",
     leader = "#",
-    wrap_char = true
+    wrap_char = true,
   },
   ["\\mathcal"] = {
     lhs = "c",
     leader = "#",
-    wrap_char = true
+    wrap_char = true,
   },
   ["\\mathscr"] = {
     lhs = "s",
     leader = "#",
-    wrap_char = true
+    wrap_char = true,
   },
   ["\\mathsf"] = {
     lhs = "S",
     leader = "#",
-    wrap_char = true
+    wrap_char = true,
   },
   ["\\mathfrak"] = {
     lhs = "f",
     leader = "#",
-    wrap_char = true
-  }
+    wrap_char = true,
+  },
 }
 
 function M.tex_math_mode()
@@ -97,7 +97,9 @@ function M.tex_math_mode()
       return true
     elseif t == "ERROR" then
       local tab = vim.treesitter.get_node_text(node, 0)
-      if type(tab) == 'string' then tab = {tab} end
+      if type(tab) == "string" then
+        tab = { tab }
+      end
       for _, text in ipairs(tab) do
         if string.find(text, "%$") or string.find(text, "\\%[") then
           return true
@@ -113,7 +115,9 @@ function M.tex_math_mode()
 end
 
 function M.markdown_math_mode()
-  if M.tex_math_mode() then return true end
+  if M.tex_math_mode() then
+    return true
+  end
   local node = ts_utils.get_node_at_cursor(0)
   local parent
   if node then
@@ -127,7 +131,9 @@ function M.markdown_math_mode()
       local row, col = unpack(vim.api.nvim_win_get_cursor(0))
       local inside = false
       for i, text in ipairs(tab) do
-        if i > row - start_row then break end
+        if i > row - start_row then
+          break
+        end
         local index = 0
         local flag = false
         repeat
@@ -164,7 +170,7 @@ local tex_default_map = {
 
 local markdown_default_map = {
   wrap_char = false,
-  context = M.markdown_math_mode
+  context = M.markdown_math_mode,
 }
 
 function M.init(args, filetype)
@@ -181,8 +187,8 @@ function M.init(args, filetype)
 end
 
 function M._init_tex(args)
-  vim.treesitter.language.register('latex', 'tex')
-  vim.treesitter.language.register('latex', 'plaintex')
+  vim.treesitter.language.register("latex", "tex")
+  vim.treesitter.language.register("latex", "plaintex")
   for rhs, map in pairs(args.add) do
     if type(map) == "string" then
       map = {
@@ -195,13 +201,13 @@ function M._init_tex(args)
         if not map.wrap_char then
           return rhs
         else
-          local char = vim.api.nvim_eval('nr2char(getchar())')
+          local char = vim.api.nvim_eval("nr2char(getchar())")
           return rhs .. "{" .. char .. "}"
         end
       else
         return map.leader .. map.lhs
       end
-    end, {buffer = true, expr = true, desc = rhs .. (map.wrap_char and "{}" or "")})
+    end, { buffer = true, expr = true, desc = rhs .. (map.wrap_char and "{}" or "") })
   end
 end
 
@@ -221,20 +227,18 @@ function M._init_markdown(args)
         if not map.wrap_char then
           return rhs
         else
-          local char = vim.api.nvim_eval('nr2char(getchar())')
+          local char = vim.api.nvim_eval("nr2char(getchar())")
           return rhs .. "{" .. char .. "}"
         end
       else
         return map.leader .. map.lhs
       end
-    end, {buffer = true, expr = true, desc = rhs .. (map.wrap_char and "{}" or "")})
+    end, { buffer = true, expr = true, desc = rhs .. (map.wrap_char and "{}" or "") })
   end
 end
 
 function M.any_mode()
   return true
 end
-
-
 
 return M
