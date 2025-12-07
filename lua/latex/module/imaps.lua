@@ -126,7 +126,7 @@ function M.markdown_math_mode()
   while node ~= nil do
     local t = node:type()
     if t == "inline" then
-      local start_row, _, end_row, _ = vim.treesitter.query.get_node_range(node)
+      local start_row, _, end_row, _ = node:range()
       local tab = vim.api.nvim_buf_get_lines(0, start_row, end_row + 1, false)
       local row, col = unpack(vim.api.nvim_win_get_cursor(0))
       local inside = false
